@@ -1,43 +1,19 @@
-import React, { useState } from 'react';
-import Tweet from './Tweet';
-import './App.css'
-
+import React from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import {increment, decrement} from './actions';
 
 function App() {
 
-  const [isRed, setRed] = useState(false);
-  const [count, setCount] = useState(0);
-
-
-  const increment = () => {
-    setCount(count + 1);
-    setRed(!isRed);
-  }
-
-  const [users, setUsers] = useState([
-    { name: 'test', message: 'test message',},
-    {
-      name: 'test1', message: 'test message1',
-    },
-    {
-      name: 'test2', message: 'test message2',
-    },
-    {
-      name: 'test3', message: 'test message3',
-    }
-  ])
+  const counter = useSelector( state => state.counter );
+  const isLogged = useSelector( state => state.isLogged );
+  const dispatch = useDispatch();
 
   return (
-    <div className="app">
-      <h1 className={isRed ? 'red' : ''}>Change my color!</h1>
-      <button onClick={increment}>Increment</button>
-      <h1>{count}</h1>
-      <div>
-        {users.map(user => (
-          <Tweet name={user.name} message={user.message}/>
-        ))}
-      </div>
-      
+    <div className="App">
+      <button onClick={()=>dispatch(increment(5))}>+</button>
+      <h1>Counter {counter}</h1>
+      <button onClick={()=>dispatch(decrement())}>-</button>
+      {isLogged ? <h4>Valuable</h4> : ''}
     </div>
   );
 }
