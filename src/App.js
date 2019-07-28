@@ -1,45 +1,65 @@
-import React, { useState } from 'react';
-import Tweet from './Tweet';
+import React, {useEffect, useState} from 'react';
+
+import Recipe from './components/Recipe';
+
 import './App.css'
 
+const App = () => {
 
-function App() {
+  const APP_ID = 'f4f79653';
+  const APP_KEY = 'd017efd168ae2ba9a97698fc6fb0e0bf';
 
-  const [isRed, setRed] = useState(false);
-  const [count, setCount] = useState(0);
+  const [recepies, setRecepies] = useState([]);
+  const [search, setSearch] = useState('');
+  const [query, setQuery] = useState('chicken');
 
+  useEffect(()=>{
+    getRecipes()
+  }, [query]);
 
-  const increment = () => {
-    setCount(count + 1);
-    setRed(!isRed);
+  const getRecipes = async () => {
+    const exampleReq = `https://api.edamam.com/search?q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}`;
+    const response = await fetch(exampleReq)
+    const data = await response.json();
+    setRecepies(data.hits);
   }
 
-  const [users, setUsers] = useState([
-    { name: 'test', message: 'test message',},
-    {
-      name: 'test1', message: 'test message1',
-    },
-    {
-      name: 'test2', message: 'test message2',
-    },
-    {
-      name: 'test3', message: 'test message3',
-    }
-  ])
+  const updateSearch = e => {
+    setSearch(e.target.value);
+  }
+
+  const getSearch = e => {
+    e.preventDefault();
+    setQuery(search);
+  }
 
   return (
-    <div className="app">
-      <h1 className={isRed ? 'red' : ''}>Change my color!</h1>
-      <button onClick={increment}>Increment</button>
-      <h1>{count}</h1>
-      <div>
-        {users.map(user => (
-          <Tweet name={user.name} message={user.message}/>
-        ))}
-      </div>
-      
+    <div className="App">
+      <form 
+        className="search-form"
+        onSubmit={getSearch}>
+        <input 
+          className="search-bar" 
+          type="text" 
+          onChange={updateSearch} 
+          value={search}/>
+        <button 
+          className="search-button" 
+          type="submit">
+            Search
+        </button>
+      </form>
+      {recepies.map((recipe) => (
+        <Recipe 
+          key={recipe.recipe.label}
+          title={recipe.recipe.label} 
+          image={recipe.recipe.image} 
+          calories={recipe.recipe.calories}
+          ingredients={recipe.recipe.ingredients}
+        />
+      ))}
     </div>
-  );
+  )
 }
 
 export default App;
