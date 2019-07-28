@@ -1,44 +1,29 @@
 import React, { useState } from 'react';
-import Tweet from './Tweet';
-import './App.css'
 
+import './App.css';
+
+import Nav from './components/Nav';
+import Home from './pages/Home';
+import About from './pages/About';
+import Shop from './pages/Shop';
+import ItemDetail from './pages/ItemDetail';
+
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 function App() {
 
-  const [isRed, setRed] = useState(false);
-  const [count, setCount] = useState(0);
-
-
-  const increment = () => {
-    setCount(count + 1);
-    setRed(!isRed);
-  }
-
-  const [users, setUsers] = useState([
-    { name: 'test', message: 'test message',},
-    {
-      name: 'test1', message: 'test message1',
-    },
-    {
-      name: 'test2', message: 'test message2',
-    },
-    {
-      name: 'test3', message: 'test message3',
-    }
-  ])
-
   return (
-    <div className="app">
-      <h1 className={isRed ? 'red' : ''}>Change my color!</h1>
-      <button onClick={increment}>Increment</button>
-      <h1>{count}</h1>
-      <div>
-        {users.map(user => (
-          <Tweet name={user.name} message={user.message}/>
-        ))}
+    <Router>
+      <div className="app">
+        <Nav />
+        <Switch>
+          <Route path="/" component={Home} exact />
+          <Route path="/about" component={About} />
+          <Route path="/shop" component={Shop} exact />
+          <Route path="/shop/:id" component={ItemDetail} exact/>
+        </Switch>
       </div>
-      
-    </div>
+    </Router>
   );
 }
 
